@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#07130f" />
+<title>Наш рождественский календарь 🎄</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Christmas+Script+Air&family=Marck+Script&display=swap" rel="stylesheet">
+<style>
+/* ================= БАЗА ================= */
+:root{
+  --gold:#f0c674;
+  --gold-soft:#e8d5a8;
+  --cream:#f6efe3;
+  --red:#c4544a;
+  --mint:#8fd6b4;
+  --stroke:rgba(240,198,116,.25);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; min-height:100vh;
+  font-family:'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  font-size:17px;
+  color:var(--cream);
+  background-color:#07130f;
+  background-image:url('christmassss.jpg');
+  background-position:center top;
+  background-size:cover;
+  background-repeat:no-repeat;
+  background-attachment:scroll; /* на мобильных — scroll, иначе фон пропадает */
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(240,198,116,.10), transparent 22%),
+    radial-gradient(circle at 84% 12%, rgba(196,84,74,.10), transparent 20%),
+    radial-gradient(circle at 70% 78%, rgba(143,214,180,.08), transparent 24%),
+    radial-gradient(circle at 22% 86%, rgba(240,198,116,.07), transparent 20%);
+  filter:blur(6px);
+}
+@media (min-width:768px){
+  body{ background-attachment:fixed; } /* «прибитый» фон только на десктопе */
+}
+
+.wrap{
+  position:relative; z-index:3;
+  max-width:980px; margin:0 auto;
+  padding:60px 20px 90px;
+}
+
+/* ================= ШАПКА ================= */
+.hero{text-align:center; margin-bottom:42px}
+.hero__kicker{
+  letter-spacing:.38em; text-transform:uppercase;
+  font-size:10.5px; color:var(--gold); opacity:.85; margin:0 0 20px;
+}
+.hero__title{
+  font-weight:700; font-size:clamp(28px,6.2vw,50px);
+  line-height:1.12; margin:0 0 14px;
+  font-family:'Christmas Script Air', cursive;
+  color:#f0c674;
+}
+.hero__sign{
+  font-family:'Christmas Script Air', cursive;
+  font-size:clamp(32px,6vw,42px);
+  font-weight:700;
+  color:var(--gold-soft); margin:0 0 18px;
+  opacity:.95;
+}
+.hero__sub{
+  max-width:540px; margin:0 auto; font-size:clamp(12.5px,2.6vw,14.5px);
+  line-height:1.75; color:#cfe3d8; opacity:.8;
+}
+
+/* ================= ТАЙМЕР ================= */
+.countdown-block{display:flex; flex-direction:column; align-items:center; gap:12px; margin:0 0 50px}
+.countdown{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+.cd-box{
+  padding:0;
+  border:none;
+  background:transparent;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  box-shadow:none;
+  text-align:center;
+}
+.cd-num{
+  font-family:'Playfair Display', Georgia, serif;
+  display:block; font-size:26px; font-weight:700; color:var(--gold); line-height:1;
+  letter-spacing:.02em;
+}
+.cd-lab{display:block; font-size:9px; letter-spacing:.18em; text-transform:uppercase; opacity:.55; margin-top:6px}
+.cd-cap{font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; opacity:.55; text-align:center}
+
+/* ================= СЕТКА КАЛЕНДАРЯ ================= */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(160px,1fr));
+  gap:14px;
+}
+@media (min-width:1024px){
+  .grid{ grid-template-columns:repeat(4,1fr); }
+}
+.card{
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:space-between;
+  min-height:158px; padding:18px 16px 16px;
+  border-radius:22px; cursor:pointer;
+  font-family:inherit; color:inherit; text-align:center; /* ← выравнивание по центру */
+  border:1px solid var(--stroke);
+  background:linear-gradient(160deg, rgba(255,255,255,.075), rgba(255,255,255,.018));
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  transition:transform .28s cubic-bezier(.2,.8,.3,1), box-shadow .28s, border-color .28s;
+}
+.card::after{
+  content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.14), transparent);
+  transform:skewX(-18deg); transition:left .7s ease; pointer-events:none;
+}
+.card:hover{transform:translateY(-5px); border-color:rgba(240,198,116,.5)}
+.card:hover::after{left:130%}
+
+.card__day{
+  font-family:'Playfair Display', Georgia, serif;
+  font-size:37px; font-weight:700; line-height:1; color:#fff7e8;
+}
+.card__mon{font-size:11px; letter-spacing:.22em; text-transform:uppercase; opacity:.5; display:block; margin-top:5px}
+.card__gift{font-size:27px; line-height:1; margin:14px 0 10px}
+.card__cap{font-size:12px; letter-spacing:.12em; text-transform:uppercase; opacity:.65}
+
+.card.is-locked{opacity:.62}
+.card.is-locked .card__gift{filter:grayscale(1); opacity:.7}
+.card.is-unlocked{
+  border-color:rgba(240,198,116,.55);
+  box-shadow:0 0 0 1px rgba(240,198,116,.12), 0 18px 50px -26px rgba(240,198,116,.95);
+}
+.card.is-opened{border-color:rgba(143,214,180,.45)}
+.card.is-opened .card__gift{filter:none}
+.card.is-today{animation:cardGlow 2.8s ease-in-out infinite}
+@keyframes cardGlow{
+  0%,100%{box-shadow:0 0 0 1px rgba(240,198,116,.12), 0 18px 50px -26px rgba(240,198,116,.9)}
+  50%{box-shadow:0 0 0 2px rgba(240,198,116,.35), 0 22px 60px -22px rgba(240,198,116,1)}
+}
+.card__badge{
+  position:absolute; top:12px; right:12px;
+  font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+  background:var(--gold); color:#3a2a08;
+  padding:4px 9px; border-radius:999px;
+}
+.card.is-shake{animation:shake .45s}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-7px)}
+  40%{transform:translateX(7px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+
+/* ================= МОДАЛКА ================= */
+.modal{
+  position:fixed; inset:0; z-index:60; display:none;
+  align-items:center; justify-content:center; padding:18px;
+}
+.modal.is-open{display:flex}
+.modal__backdrop{
+  position:absolute; inset:0;
+  background:rgba(3,10,8,.8);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
+  animation:fade .3s ease;
+}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal__box{
+  position:relative; width:min(680px,100%); max-height:88vh; overflow-y:auto;
+  border-radius:28px; padding:clamp(20px,4.5vw,38px);
+  background:linear-gradient(170deg,#132b21 0%, #0b1c16 55%, #0a1712 100%);
+  border:1px solid rgba(240,198,116,.32);
+  box-shadow:0 50px 120px -40px #000, inset 0 1px 0 rgba(255,255,255,.07);
+  animation:pop .38s cubic-bezier(.2,.9,.3,1.15);
+  scrollbar-width:thin; scrollbar-color:rgba(240,198,116,.4) transparent;
+}
+.modal__box::-webkit-scrollbar{width:6px}
+.modal__box::-webkit-scrollbar-thumb{background:rgba(240,198,116,.35); border-radius:99px}
+@keyframes pop{
+  from{opacity:0; transform:translateY(24px) scale(.96)}
+  to{opacity:1; transform:none}
+}
+.modal__close{
+  position:absolute; top:14px; right:16px; z-index:3;
+  width:38px; height:38px; border-radius:50%;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+  color:var(--cream); font-size:22px; line-height:1; cursor:pointer;
+  transition:.2s; font-family:inherit;
+}
+.modal__close:hover{background:rgba(240,198,116,.18); border-color:var(--gold); transform:rotate(90deg)}
+
+.m-head{margin:0 0 4px}
+.chip{
+  display:inline-block; font-size:11.5px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gold); border:1px solid rgba(240,198,116,.35);
+  padding:6px 13px; border-radius:999px; margin-bottom:16px;
+}
+.m-title{
+  font-family:'Playfair Display', Georgia, serif;
+  font-size:clamp(23px,4.8vw,31px); font-weight:700; margin:0 0 4px;
+  color:#fff8ea; line-height:1.2;
+}
+
+/* ================= ПИСЬМО ================= */
+.letter{
+  position:relative; margin:20px 0 24px; padding:26px 22px 22px;
+  border-radius:18px; color:#312a1d;
+  font-family:'Cormorant Garamond', 'PT Serif', Georgia, serif;
+  font-size:18px; line-height:1.75;
+  background:
+    repeating-linear-gradient(0deg, rgba(150,120,70,.035) 0 1px, transparent 1px 26px),
+    linear-gradient(180deg,#faf3e4,#efe2c9);
+  box-shadow:
+    inset 5px 0 0 #800020,
+    inset 0 0 60px rgba(160,130,80,.18),
+    0 22px 50px -30px #000;
+  animation:pop .45s ease;
+}
+.letter::before{
+  content:"";
+  position:absolute;
+  left:0; top:16px; bottom:16px; width:4px;
+  border-radius:4px 0 0 4px;
+  background:linear-gradient(180deg,#7a1a2e,#4a0e1f 50%,#7a1a2e);
+}
+.letter p{margin:0 0 15px}
+
+.letter__sign{
+  font-family:'Marck Script', cursive;
+  font-size:23px;
+  text-align:right;
+  color:#5a2a1a;
+  margin-top:24px !important;
+  padding-top:22px;
+  position:relative;
+}
+.letter__sign::before{
+  content:"❦  ❦  ❦";
+  position:absolute;
+  top:0; left:0; right:0;
+  text-align:center;
+  font-size:12px;
+  letter-spacing:.2em;
+  color:rgba(122,26,46,.35);
+}
+.letter__seal{
+  position:absolute; top:-14px; right:18px;
+  width:44px; height:44px; border-radius:50%;
+  display:grid; place-items:center; font-size:17px;
+  background:radial-gradient(circle at 35% 30%, #d9695e, #a63f36 70%);
+  color:#fff3e6;
+  box-shadow:0 8px 20px -8px rgba(166,63,54,.9), inset 0 -2px 6px rgba(0,0,0,.3);
+  transform:rotate(-8deg);
+}
+
+/* ================= ЗОНА ПОДАРКА ================= */
+.gift-zone{margin-top:6px}
+.gift-reveal{
+  border-radius:20px; padding:26px 22px; text-align:center;
+  background:linear-gradient(160deg, rgba(240,198,116,.14), rgba(240,198,116,.04));
+  border:1px solid rgba(240,198,116,.35);
+  animation:pop .5s cubic-bezier(.2,.9,.3,1.2);
+}
+.gift-reveal__emoji{font-size:44px; display:block; margin-bottom:12px}
+.gift-reveal__label{
+  font-size:11.5px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--gold); opacity:.85; margin:0 0 12px;
+}
+.gift-reveal__text{
+  margin:0; font-size:16.5px; line-height:1.75; color:#f3ead9;
+}
+
+/* ================= ЭМОЦИИ ================= */
+.emo{
+  margin-top:26px; padding-top:24px;
+  border-top:1px dashed rgba(240,198,116,.25);
+  animation:pop .5s ease;
+}
+.emo__title{font-size:18.5px; margin:0 0 8px; color:#fff6e3; font-weight:700}
+.emo__hint{font-size:14px; line-height:1.65; opacity:.62; margin:0 0 16px}
+.moods{display:flex; gap:9px; flex-wrap:wrap; margin-bottom:16px}
+.mood{
+  width:52px; height:52px; border-radius:16px; font-size:26px;
+  display:grid; place-items:center; cursor:pointer;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  transition:.2s; font-family:inherit; padding:0;
+}
+.mood:hover{transform:scale(1.08); background:rgba(255,255,255,.09)}
+.mood.is-active{
+  background:rgba(240,198,116,.2);
+  border-color:var(--gold);
+  box-shadow:0 0 24px -6px rgba(240,198,116,.8);
+  transform:scale(1.06);
+}
+textarea{
+  width:100%; min-height:96px; resize:vertical;
+  padding:14px 15px; border-radius:16px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--cream); font-family:inherit; font-size:15.5px; line-height:1.65;
+  outline:none; transition:.2s;
+}
+textarea::placeholder{color:rgba(246,239,227,.32)}
+textarea:focus{border-color:rgba(240,198,116,.6); box-shadow:0 0 0 3px rgba(240,198,116,.12)}
+.emo__actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+.emo__saved{font-size:13px; opacity:.5; margin:12px 0 0; min-height:1em}
+
+/* ================= КНОПКИ ================= */
+.btn{
+  font-family:inherit; font-weight:600; font-size:15px;
+  padding:13px 24px; border-radius:999px; cursor:pointer;
+  border:1px solid transparent; transition:.22s; letter-spacing:.01em;
+}
+.btn--primary{
+  background:linear-gradient(180deg,#f8dc95,#e2b256);
+  color:#33240a;
+  box-shadow:0 14px 34px -14px rgba(240,198,116,.95);
+}
+.btn--primary:hover{transform:translateY(-2px); box-shadow:0 20px 40px -14px rgba(240,198,116,1)}
+.btn--primary:active{transform:translateY(0)}
+.btn--ghost{
+  background:transparent; border-color:rgba(240,198,116,.35); color:var(--gold);
+}
+.btn--ghost:hover{background:rgba(240,198,116,.1); border-color:var(--gold)}
+.btn--full{width:100%; text-align:center; padding:16px 24px; font-size:16px}
+
+/* ================= ТОСТ ================= */
+.toast{
+  position:fixed; left:50%; bottom:30px; z-index:90;
+  transform:translate(-50%,24px);
+  max-width:calc(100vw - 36px);
+  padding:14px 24px; border-radius:999px;
+  background:rgba(18,42,32,.97);
+  border:1px solid rgba(240,198,116,.42);
+  color:var(--cream); font-size:14.5px; line-height:1.5; text-align:center;
+  box-shadow:0 24px 60px -22px #000;
+  opacity:0; pointer-events:none; transition:.38s cubic-bezier(.2,.9,.3,1.2);
+}
+.toast.is-show{opacity:1; transform:translate(-50%,0)}
+
+/* ================= ФУТЕР ================= */
+.footer{text-align:center; margin-top:56px; font-size:13.5px; line-height:1.9; opacity:.45}
+.footer__heart{color:var(--red); font-size:15px}
+
+/* ================= LOCK MESSAGE ================= */
+.lock-message{
+  position:fixed; bottom:30px; left:50%; z-index:85;
+  transform:translate(-50%, 24px);
+  max-width:calc(100vw - 36px);
+  padding:20px 28px; border-radius:22px;
+  background:linear-gradient(160deg, rgba(255,255,255,.075), rgba(255,255,255,.018));
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid var(--stroke);
+  color:var(--cream); font-size:17.5px; line-height:1.6; text-align:center;
+  box-shadow:0 18px 50px -26px rgba(240,198,116,.95);
+  opacity:0; pointer-events:none; transition:all .38s cubic-bezier(.2,.9,.3,1.2);
+  animation:popIn .4s cubic-bezier(.2,.9,.3,1.15);
+}
+.lock-message.is-show{opacity:1; transform:translate(-50%, 0)}
+@keyframes popIn{
+  from{opacity:0; transform:translate(-50%, 32px) scale(.92)}
+  to{opacity:1; transform:translate(-50%, 0) scale(1)}
+}
+
+/* ================= АДАПТИВ ================= */
+@media (max-width:520px){
+  .wrap{padding:40px 16px 70px}
+  .grid{grid-template-columns:1fr; gap:12px}     /* ← один подарок в ряд */
+  .card{min-height:120px; padding:15px 16px 13px; border-radius:18px}
+  .card__day{font-size:34px}
+  .card__gift{font-size:26px; margin:11px 0 8px}
+  .card__cap{font-size:11px}
+  .cd-box{padding:0}
+  .cd-num{font-size:24px}
+  .letter{padding:22px 17px 18px; font-size:16.5px}
+  .btn--full{padding:16px 20px; font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001s !important; transition-duration:.001s !important}
+}
+</style>
+</head>
+<body>
+
+<main class="wrap">
+
+  <header class="hero">
+    <h1 class="hero__title">Адвент Календарь😊</h1>
+    <p class="hero__sign">для тебя, <span id="herName">моя Любимая Анечка</span></p>
+  </header>
+
+  <section class="countdown-block" id="countdownSection">
+    <div class="countdown" id="countdown">
+      <div class="cd-box"><span class="cd-num" id="cdDate">--/--</span></div>
+    </div>
+  </section>
+
+  <section class="grid" id="calendar" aria-label="Календарь подарков"></section>
+
+  <footer class="footer">
+    <p><span class="footer__heart">❤️</span> Волшебство рождества <span class="footer__heart">❤️</span></p>
+  </footer>
+
+</main>
+
+<!-- ================= МОДАЛКА ================= -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__box" role="dialog" aria-modal="true" aria-label="Письмо и подарок">
+    <button class="modal__close" data-close aria-label="Закрыть">×</button>
+    <div id="modalInner"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Lock Message Popup -->
+<div class="lock-message" id="lockMessage"></div>
+
+<script>
+/* =========================================================
+   1. НАСТРОЙКИ
+   ========================================================= */
+const CONFIG = {
+  herName:  "моя Любимая Анечка",
+  signature:"Твой навсегда Даниэлька",
+  meetDay:  28
+};
+
+const MOODS = ["😍","🥰","🥺","😂","🔥","😘","🤪"];
+
+const DAYS = [
+  {
+    date: 21,
+    emoji: "🍫",
+    title: "День первый. ГАЗУЕМ!",
+    letter: `Привет, любимая.
+
+Если ты сейчас это читаешь — значит, скоро Новый год.
+
+Правила: сначала читаешь открытку, потом открываешь подарок.
+Если хочешь, то можешь делать лайв-реакцию — гс или кружок))
+Рассказывай о своих эмоциях на сайте, чтобы потом вместе посмотрели)
+
+Я думаю, это будет достаточно интересная для тебя неделя, так что готовься).
+Я подготовил для тебя немного сюрпризиков и решил поинтереснее всё устроить. Мне очень нравится атмосфера Рождества и Нового Года. Ещё я люблю адвент-календари, поэтому решил совместить эти вещи и порадовать тебя таким вот образом.
+
+А теперь побыстрее открывай подарок.`,
+    giftEmoji: "🍫",
+    giftTitle: "Подарок №1",
+    gift: "Шоколадка и записка, которую я писал, когда думал о тебе)"
+  },
+  {
+    date: 22,
+    emoji: "📒",
+    title: "День второй. Простые, но милые моменты",
+    letter: `Знаешь, что мне нравится в тебе? То, какая ты есть. Мне нравится, как ты улыбаешься, как смотришь на меня сердито, как рассказываешь что-то увлечённо, как изображаешь морскю свинку или просто кривляешься. Мне нравится, как ты общаешься с другими людьми, 
+
+Я очень сильно люблю тебя, моё солнышко.`,
+    giftEmoji: "📒",
+    giftTitle: "Подарок №2",
+    gift: "Румбокс. Я помню, как ты вовлечённо клеила наклейки, и меня это умиляло. А ещё я не нашёл нормального смайлика..."
+  },
+  {
+    date: 23,
+    emoji: "🕯️",
+    title: "День третий. Про тепло",
+    letter: `Сегодня без философии.
+
+Просто хочу, чтобы ты знала: ты — самый тёплый человек в моей жизни. С тобой даже обычный вторник становится событием, которое я потом весь вечер вспоминаю.
+
+Спасибо, что ты есть. Правда.`,
+    giftEmoji: "🕯️",
+    giftTitle: "Подарок №3",
+    gift: "Что-то для уюта. Завернись в это вечером и представь, что я рядом. (Я правда рядом — просто пока не физически.)"
+  },
+  {
+    date: 24,
+    emoji: "✨",
+    title: "День четвёртый. Сочельник",
+    letter: `Сегодня сочельник. В такие вечера принято загадывать.
+
+Я загадал задолго до этого — и уже получил: тебя.
+
+Открой подарок и подумай о своём желании. Только чур одно из них будет про нас.`,
+    giftEmoji: "🌟",
+    giftTitle: "Подарок №4",
+    gift: "Маленькая вещь, которая светится в темноте. Как ты — в моей жизни."
+  },
+  {
+    date: 25,
+    emoji: "📸",
+    title: "День пятый. С Рождеством",
+    letter: `С Рождеством, любимая.
+
+Сегодня утро особенное. И я хочу, чтобы ты знала: просыпаться с мыслью о тебе — лучшее, что случилось со мной за этот год.
+
+Пусть у тебя сегодня будет всё, что ты любишь. И я.`,
+    giftEmoji: "🖼️",
+    giftTitle: "Подарок №5",
+    gift: "Наше фото. То самое, где ты смеёшься, а я смотрю на тебя вместо камеры. Поставь на видное место — пусть напоминает."
+  },
+  {
+    date: 26,
+    emoji: "🎀",
+    title: "День шестой. Уже почти",
+    letter: `Уже почти неделя прошла.
+
+Скажи честно — ждала каждое утро? Я ждал твоих сообщений после каждого подарка. Это была моя маленькая ежедневная доза счастья.
+
+Сегодня внутри что-то совсем небольшое, но очень «про тебя». Надеюсь, угадал.`,
+    giftEmoji: "🎀",
+    giftTitle: "Подарок №6",
+    gift: "Маленькая приятная мелочь — та, что всегда при себе. Носи и вспоминай, что тебя где-то очень ждут."
+  },
+  {
+    date: 27,
+    emoji: "🎟️",
+    title: "День седьмой. Последний подарок",
+    letter: `Последний подарок из коробки.
+
+Но это не последний сюрприз — завтра мы увидимся, и я наконец отдам тебе то, что готовил дольше всего.
+
+Спасибо за эту неделю. За каждое «ой» и за каждый смайлик, который ты мне присылала.
+
+Я люблю тебя. Завтра скажу это лично.`,
+    giftEmoji: "🎟️",
+    giftTitle: "Подарок №7",
+    gift: "Самодельный «сертификат» на вечер, который мы проведём так, как захочешь ты. Активируется по первому слову «хочу»."
+  },
+  {
+    date: 28,
+    emoji: "🎁",
+    title: "День восьмой. Тот самый",
+    letter: `Вот и всё.
+
+Восемь дней, восемь поводов сказать тебе, что я тебя люблю. Хотя мне хватило бы и одного.
+
+Сегодня я вручу тебе главный подарок лично. Не потому что он большой, а потому что мне важно видеть твои глаза в этот момент.
+
+До встречи. Я уже волнуюсь.`,
+    giftEmoji: "🎁",
+    giftTitle: "Главный подарок",
+    gift: "Румбокс. Тот самый, который я собирал дольше всего. Вручу лично — сегодня.",
+    final: true
+  }
+];
+
+/* =========================================================
+   2. ДАТЫ И ХРАНИЛИЩЕ
+   ========================================================= */
+const YEAR = new Date().getFullYear();
+const MONTH = 11; // декабрь
+
+const urlParams = new URLSearchParams(window.location.search);
+const ADMIN_MODE = urlParams.get("admin") === "1";
+
+function dateOf(dayNum){
+  return new Date(YEAR, MONTH, dayNum, 0, 0, 0, 0);
+}
+function isUnlocked(dayNum){
+  if(ADMIN_MODE) return true;
+  return Date.now() >= dateOf(dayNum).getTime();
+}
+function isToday(dayNum){
+  const now = new Date();
+  return now.getFullYear() === YEAR && now.getMonth() === MONTH && now.getDate() === dayNum;
+}
+
+const STORE_KEY = "xmas_advent_sa_v1";
+let store = loadStore();
+
+function loadStore(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(STORE_KEY));
+    if(raw && Array.isArray(raw.opened) && raw.emotions) return raw;
+  }catch(e){}
+  return { opened: [], emotions: {} };
+}
+function persist(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }catch(e){}
+}
+function isOpened(dayNum){
+  return store.opened.includes(dayNum);
+}
+function markOpened(dayNum){
+  if(!isOpened(dayNum)){ store.opened.push(dayNum); persist(); }
+}
+
+/* =========================================================
+   3. УТИЛИТЫ
+   ========================================================= */
+const $ = (sel, root=document) => root.querySelector(sel);
+
+function escapeHtml(str){
+  return String(str)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function normalizeMoods(mood){
+  if(!mood) return [];
+  if(Array.isArray(mood)) return mood.slice();
+  return [mood];
+}
+let toastTimer = null;
+function showToast(msg){
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.add("is-show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("is-show"), 3200);
+}
+
+let lockMsgTimer = null;
+function showLockedTooltip(msg){
+  const el = $("#lockMessage");
+  el.textContent = msg;
+  el.classList.add("is-show");
+  clearTimeout(lockMsgTimer);
+  lockMsgTimer = setTimeout(() => el.classList.remove("is-show"), 3400);
+}
+
+/* =========================================================
+   4. ТАЙМЕР
+   ========================================================= */
+function updateCountdown(){
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, "0");
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  $("#cdDate").textContent = day + "/" + month;
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* =========================================================
+   5. КАЛЕНДАРЬ
+   ========================================================= */
+function renderCalendar(){
+  const grid = $("#calendar");
+  grid.innerHTML = "";
+
+  DAYS.forEach((d, i) => {
+    const unlocked = isUnlocked(d.date);
+    const opened = isOpened(d.date);
+    const today = isToday(d.date);
+
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "card"
+      + (unlocked ? " is-unlocked" : " is-locked")
+      + (opened ? " is-opened" : "")
+      + (today && unlocked ? " is-today" : "");
+    card.dataset.index = i;
+
+    let icon = "🔒";
+    if(unlocked) icon = opened ? "✓" : d.emoji;
+    if(opened && d.final) icon = "✓";
+
+    const cap = d.final ? "Главный подарок" : "";
+
+    card.innerHTML = `
+      ${today && unlocked ? '<span class="card__badge">сегодня</span>' : ''}
+      <div>
+        <span class="card__day">${d.date}</span>
+        <span class="card__mon">декабря</span>
+      </div>
+      <div class="card__gift">${icon}</div>
+      <div class="card__cap">${cap}</div>
+    `;
+
+    card.addEventListener("click", () => handleCardClick(i, card));
+    grid.appendChild(card);
+  });
+}
+
+let lastUnlockedKey = "";
+function unlockedKey(){
+  return DAYS.map(d => isUnlocked(d.date) ? "1" : "0").join("");
+}
+
+function handleCardClick(i, cardEl){
+  const d = DAYS[i];
+  if(!isUnlocked(d.date)){
+    cardEl.classList.remove("is-shake");
+    void cardEl.offsetWidth;
+    cardEl.classList.add("is-shake");
+    showLockedTooltip(randomLockMessage());
+    return;
+  }
+  openModal(i);
+}
+
+const LOCK_MESSAGES = [
+  "Не-не-не, пока нельзяя😜",
+  "Проверь в другой день, Любимая Анечка😁",
+  "ПОДАРОК ЗАКРЫТ КУДА ЛЕЗИШЬ"
+];
+function randomLockMessage(){
+  return LOCK_MESSAGES[Math.floor(Math.random() * LOCK_MESSAGES.length)];
+}
+
+/* =========================================================
+   6. МОДАЛКА
+   ========================================================= */
+const modal = $("#modal");
+const modalInner = $("#modalInner");
+let currentDayIndex = null;
+let currentMood = "";
+
+function openModal(i){
+  currentDayIndex = i;
+  const d = DAYS[i];
+  const saved = store.emotions[d.date];
+  currentMood = saved ? normalizeMoods(saved.mood) : [];
+
+  const paragraphs = d.letter
+    .split("\n\n")
+    .map(p => "<p>" + escapeHtml(p).replace(/\n/g, "<br>") + "</p>")
+    .join("");
+
+  modalInner.innerHTML = `
+    <div class="m-head">
+      <span class="chip">${d.date} декабря</span>
+      <h2 class="m-title">${escapeHtml(d.title)}</h2>
+    </div>
+
+    <div class="letter">
+      <div class="letter__seal">♥</div>
+      ${paragraphs}
+      <p class="letter__sign">— ${escapeHtml(CONFIG.signature)}</p>
+    </div>
+
+    <div class="gift-zone" id="giftZone"></div>
+  `;
+
+  renderGiftZone(i);
+
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  modal.querySelector(".modal__box").scrollTop = 0;
+}
+
+function closeModal(){
+  modal.classList.remove("is-open");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+  currentDayIndex = null;
+}
+
+function renderGiftZone(i){
+  const d = DAYS[i];
+  const zone = $("#giftZone");
+  if(!zone) return;
+
+  if(isOpened(d.date)){
+    zone.innerHTML = `
+      <div class="gift-reveal">
+        <span class="gift-reveal__emoji">${d.giftEmoji}</span>
+        <p class="gift-reveal__label">${escapeHtml(d.giftTitle)}</p>
+        <p class="gift-reveal__text">${escapeHtml(d.gift)}</p>
+      </div>
+      ${emotionsHTML(d)}
+    `;
+    bindEmotions(d);
+  } else {
+    zone.innerHTML = `
+      <button class="btn btn--primary btn--full" id="revealBtn" type="button">
+        ${d.final ? "Я готова 🎁" : "Открыть подарок 🎁"}
+      </button>
+    `;
+    $("#revealBtn").addEventListener("click", () => revealGift(i));
+  }
+}
+
+function revealGift(i){
+  const d = DAYS[i];
+  markOpened(d.date);
+  renderGiftZone(i);
+  renderCalendar();
+
+  const zone = $("#giftZone");
+  if(zone){
+    setTimeout(() => {
+      zone.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 80);
+  }
+  showToast("Открыто ❤️");
+}
+
+/* =========================================================
+   7. ЭМОЦИИ
+   ========================================================= */
+function emotionsHTML(d){
+  const saved = store.emotions[d.date];
+  const savedMoods = saved ? normalizeMoods(saved.mood) : [];
+  const moods = MOODS.map(m =>
+    `<button class="mood${savedMoods.includes(m) ? " is-active" : ""}"
+             data-mood="${m}" type="button" aria-label="настроение ${m}">${m}</button>`
+  ).join("");
+
+  return `
+    <div class="emo">
+      <h3 class="emo__title">Твои эмоции 💌</h3>
+      <p class="emo__hint">
+        Выбери одно или несколько настроений и напиши пару слов — это сохранится только на твоём устройстве.
+        В конце недели покажешь мне всё, что накопилось.
+      </p>
+      <div class="moods" id="moods">${moods}</div>
+      <textarea id="emoText" maxlength="600"
+        placeholder="Например: «оу, Даниэлька-Карамелька, это так милооо❤️😭» ">${saved ? escapeHtml(saved.text) : ""}</textarea>
+      <div class="emo__actions">
+        <button class="btn btn--primary" id="emoSave" type="button">Сохранить</button>
+      </div>
+      <p class="emo__saved" id="emoSaved">${saved ? "Сохранено " + formatTs(saved.ts) : ""}</p>
+    </div>
+  `;
+}
+
+function bindEmotions(d){
+  const moodsBox = $("#moods");
+  const textarea = $("#emoText");
+
+  moodsBox.addEventListener("click", e => {
+    const btn = e.target.closest(".mood");
+    if(!btn) return;
+    const m = btn.dataset.mood;
+    if(currentMood.includes(m)){
+      currentMood = currentMood.filter(x => x !== m);
+      btn.classList.remove("is-active");
+    } else {
+      currentMood.push(m);
+      btn.classList.add("is-active");
+    }
+  });
+
+  $("#emoSave").addEventListener("click", () => {
+    saveEmotion(d, textarea.value, currentMood);
+    showToast("Сохранила 💚 Спасибо, что делишься");
+  });
+}
+
+
+function saveEmotion(d, text, mood){
+  store.emotions[d.date] = {
+    mood: Array.isArray(mood) ? mood.slice() : (mood ? [mood] : []),
+    text: (text || "").trim(),
+    ts: Date.now()
+  };
+  persist();
+  const label = $("#emoSaved");
+  if(label) label.textContent = "Сохранено " + formatTs(Date.now());
+}
+
+function formatTs(ts){
+  try{
+    return new Date(ts).toLocaleString("ru-RU", {
+      day: "numeric", month: "long", hour: "2-digit", minute: "2-digit"
+    });
+  }catch(e){ return ""; }
+}
+
+/* =========================================================
+   8. ЗАКРЫТИЕ МОДАЛКИ
+   ========================================================= */
+modal.addEventListener("click", e => {
+  if(e.target.closest("[data-close]")) closeModal();
+});
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+});
+
+/* =========================================================
+   9. СТАРТ
+   ========================================================= */
+$("#herName").textContent = CONFIG.herName;
+
+if(ADMIN_MODE){
+  const countdownSection = $("#countdownSection");
+  if(countdownSection){
+    countdownSection.innerHTML = '<p style="text-align:center; color:#f0c674; font-size:12px; letter-spacing:.1em; text-transform:uppercase; opacity:.7">🔓 Admin Mode — Все дни открыты</p>';
+  }
+}
+
+renderCalendar();
+lastUnlockedKey = unlockedKey();
+
+setInterval(() => {
+  const key = unlockedKey();
+  if(key !== lastUnlockedKey){
+    lastUnlockedKey = key;
+    renderCalendar();
+    showToast("Новый день открылся! 🎁");
+  }
+}, 20000);
+</script>
+</body>
+</html>
