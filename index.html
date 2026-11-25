@@ -43,8 +43,13 @@ body::before{
     radial-gradient(circle at 22% 86%, rgba(240,198,116,.07), transparent 20%);
   filter:blur(6px);
 }
-@media (min-width:768px){
-  body{ background-attachment:fixed; } /* «прибитый» фон только на десктопе */
+  
+/* Фон для мобильных телефонов */
+@media (max-width: 767px){
+  body{
+    background-image: url('mm.jpg');
+    background-position: center top; 
+  }
 }
 
 .wrap{
